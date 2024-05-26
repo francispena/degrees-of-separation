@@ -62,10 +62,12 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-    source = '102' #person_id_for_name(input("Name: "))
+    #source = '102'
+    source = person_id_for_name(input("Name: "))
     if source is None:
         sys.exit("Person not found.")
-    target = '705' #person_id_for_name(input("Name: "))
+    #target = '705'
+    target = person_id_for_name(input("Name: "))
     if target is None:
         sys.exit("Person not found.")
 
@@ -94,9 +96,6 @@ def shortest_path(source, target):
     if source == target:
         return []
 
-    # Keep track of number of states explored
-    num_explored = 0
-
     # Initialize frontier to just the starting position        
     source_movie = list(people[source]['movies'])[0]
     start = Node(state=(source_movie, source) , parent=None, action=None)
@@ -117,6 +116,7 @@ def shortest_path(source, target):
                 node = node.parent
                 
             separation.reverse()
+            
             return separation
         
         explored.add(node.state)
