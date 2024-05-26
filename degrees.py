@@ -62,10 +62,10 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-    source = person_id_for_name(input("Name: "))
+    source = '102' #person_id_for_name(input("Name: "))
     if source is None:
         sys.exit("Person not found.")
-    target = person_id_for_name(input("Name: "))
+    target = '705' #person_id_for_name(input("Name: "))
     if target is None:
         sys.exit("Person not found.")
 
@@ -91,7 +91,42 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+    if source == target:
+        return []
 
+    # Keep track of number of states explored
+    num_explored = 0
+
+    # Initialize frontier to just the starting position        
+    source_movie = list(people[source]['movies'])[0]
+    start = Node(state=(source_movie, source) , parent=None, action=None)
+    frontier = QueueFrontier()
+    frontier.add(start)
+
+    # Initialize an empty explored set    
+    explored = set()
+
+    # Keep looping until solution found or until no path found
+    while True:
+        node = frontier.remove()
+
+        if (node.state[1] == target):
+            separation = []
+            while node.parent is not None:
+                separation.append(node.state)
+                node = node.parent
+                
+            separation.reverse()
+            return separation
+        
+        explored.add(node.state)
+
+        for movie_id, person_id in neighbors_for_person(node.state[1]):
+            if not frontier.contains_state((movie_id, person_id)) and person_id not in explored:
+                child = Node(state=(movie_id, person_id), parent=node, action=None)
+                frontier.add(child)
+                
+    return None
 
 
 def person_id_for_name(name):
