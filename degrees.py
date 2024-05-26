@@ -96,7 +96,7 @@ def shortest_path(source, target):
 
     # Initialize frontier to just the starting position        
     source_movie = list(people[source]['movies'])[0]
-    start = Node(state=(source_movie, source), parent=None, action=None)
+    start = Node(state=(source_movie, source), parent=None)
     frontier = QueueFrontier()
     frontier.add(start)
 
@@ -110,23 +110,24 @@ def shortest_path(source, target):
             return None
         # Choose a node from the frontier
         node = frontier.remove()
-        # If node is the goal, then we have a solution
-        if (node.state[1] == target):
-            separation = []
-            while node.parent is not None:
-                separation.append(node.state)
-                node = node.parent
-                
-            separation.reverse()
-            
-            return separation
         # Mark node as explored
         explored.add(node.state)
 
         # Add neighbors to frontier
         for movie_id, person_id in neighbors_for_person(node.state[1]):
             if not frontier.contains_state((movie_id, person_id)) and (movie_id, person_id) not in explored:
-                child = Node(state=(movie_id, person_id), parent=node, action=None)
+                child = Node(state=(movie_id, person_id), parent=node)
+                # If child is the goal, then we have a solution
+                if (child.state[1] == target):
+                    separation = []
+                    while child.parent is not None:
+                        separation.append(child.state)
+                        child = child.parent
+                        
+                    separation.reverse()
+                    
+                    return separation
+                
                 frontier.add(child)
                 
     return None
