@@ -5,6 +5,7 @@ FROM mcr.microsoft.com/devcontainers/python:1-3.12-bullseye
 WORKDIR /workspaces/degrees-of-separation
 
 RUN sudo apt-get update \
-    && pip install check50
+    && pip install check50 \
+    && pip install style50
 
 CMD ["bash"]

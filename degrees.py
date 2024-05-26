@@ -62,11 +62,9 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-    #source = '102'
     source = person_id_for_name(input("Name: "))
     if source is None:
         sys.exit("Person not found.")
-    #target = '705'
     target = person_id_for_name(input("Name: "))
     if target is None:
         sys.exit("Person not found.")
@@ -98,7 +96,7 @@ def shortest_path(source, target):
 
     # Initialize frontier to just the starting position        
     source_movie = list(people[source]['movies'])[0]
-    start = Node(state=(source_movie, source) , parent=None, action=None)
+    start = Node(state=(source_movie, source), parent=None, action=None)
     frontier = QueueFrontier()
     frontier.add(start)
 
@@ -110,9 +108,9 @@ def shortest_path(source, target):
         # If nothing left in frontier, then no path
         if frontier.empty():
             return None
-
+        # Choose a node from the frontier
         node = frontier.remove()
-
+        # If node is the goal, then we have a solution
         if (node.state[1] == target):
             separation = []
             while node.parent is not None:
@@ -122,11 +120,12 @@ def shortest_path(source, target):
             separation.reverse()
             
             return separation
-        
+        # Mark node as explored
         explored.add(node.state)
 
+        # Add neighbors to frontier
         for movie_id, person_id in neighbors_for_person(node.state[1]):
-            if not frontier.contains_state((movie_id, person_id)) and person_id not in explored:
+            if not frontier.contains_state((movie_id, person_id)) and (movie_id, person_id) not in explored:
                 child = Node(state=(movie_id, person_id), parent=node, action=None)
                 frontier.add(child)
                 
